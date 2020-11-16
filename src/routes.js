@@ -1,6 +1,7 @@
 import { sendMessageUrl, recieveMessageUrl } from './config.js';
 import http from 'http';
 import url from 'url';
+import { Message } from './data.js';
 import { wonderQ } from './queue.js';
 
 export const server = http.createServer((request, response) => {
@@ -24,10 +25,10 @@ export const server = http.createServer((request, response) => {
         });
 
         request.on('end', () => {
-            postMessage = JSON.parse(body)
+            let messageBody = JSON.parse(body)
 
-
-            messageId = publishToQueue(postMessage);
+            let postMessage = Messasge(messageBody)
+            let messageId = publishToQueue(postMessage);
 
             let returnResponse = {
                 "text": "Message Published to queue",

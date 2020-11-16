@@ -1,7 +1,7 @@
 /**
  * Messages of WonderQ are stored in Queue
  */
-
+import { v4 as uuidv4 } from 'uuid';
 import { Queue } from './data.js';
 
 
@@ -11,8 +11,11 @@ class WonderQ extends Queue {
         this._name = name;
     }
 
-    publishMessage(...args) {
-        //Implements publish message for Q
+    publishMessage(message) {
+        message.messageId = uuidv4();
+        message.timestamp = new Date.now();
+        this.insert(message)
+        return message.messageId
     };
 
     recieveMessages(...args) {

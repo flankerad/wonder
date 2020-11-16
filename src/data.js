@@ -1,9 +1,11 @@
 // Message to be sent from publisher
 export class Message {
-    constructor(message, id) {
+    constructor(message) {
         this._body = message;
-        this._timestamp = Date.now()
-        this._messageId = id
+        this._timestamp = Date.now();
+        this._messageId = "";
+        this._status = false;
+        this._processing = false;
     }
 }
 
@@ -20,7 +22,7 @@ export class Queue {
     };
 
     delete(...args) {
-        return this._messages.shift(...args)
+        return this._messages.pop(...args)
     };
 
     getLength(...args) {
