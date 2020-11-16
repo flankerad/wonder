@@ -2,7 +2,7 @@
  * Messages of WonderQ are stored in Queue
  */
 
-class Queue {
+export default class Queue {
     constructor(...messages, size) {
         //Initialize the queue
         this._messages = [...messages];
