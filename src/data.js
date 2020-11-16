@@ -9,11 +9,11 @@ export class Message {
 
 
 export class Queue {
-    constructor(size) {
-        //Initialize the queue
-        this._messages = [...Array(size)];
-        this._size = size;
-    };
+    // constructor(size) {
+    //     //Initialize the queue
+    //     this._messages = [...Array(size)];
+    //     this._size = size;
+    // };
 
     insert(...args) {
         return this._messages.push(...args)

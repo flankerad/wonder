@@ -1,5 +1,5 @@
 import { hostname, port } from './config.js';
-import server from './routes.js';
+import { server } from './routes.js';
 
 
 server.listen(port, hostname), () => {

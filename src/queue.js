@@ -25,3 +25,15 @@ class WonderQ extends Queue {
 }
 
 export const wonderQ = new WonderQ('wonder')
+
+
+const publishToQueue = (message) => {
+    // Function parses request body and retrieves the message
+    // Generates a message id and pushes that into the queue
+    // After inserting  message, function returns message id
+
+}
+
+const getMessagesFromQueue = () => {
+    // Function pulls messages fro
+}
