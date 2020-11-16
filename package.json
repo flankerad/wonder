@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "WonderQ",
   "main": "main.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Anshul",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.1"
+  }
 }

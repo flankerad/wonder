@@ -1,5 +1,5 @@
 // Message to be sent from publisher
-export default class Message {
+export class Message {
     constructor(message, id) {
         this._body = message;
         this._timestamp = Date.now()
@@ -7,3 +7,28 @@ export default class Message {
     }
 }
 
+
+export class Queue {
+    constructor(size) {
+        //Initialize the queue
+        this._messages = [...Array(size)];
+        this._size = size;
+    };
+
+    insert(...args) {
+        return this._messages.push(...args)
+    };
+
+    delete(...args) {
+        return this._messages.shift(...args)
+    };
+
+    getLength(...args) {
+        return this._messages.length
+    };
+
+    isfull(...args) {
+        return this._messages.length == this._size
+    };
+
+}

@@ -1,11 +1,15 @@
 /**
  * Publisher publishes message to the queue
- * Consumer picks up message from the queues
  */
-import {recieveMessageUrl,
-const publishMessage = () => {
+import { publishMessageUrl } from 'config';
+import { Message } from 'data';
+import { WonderQ } from 'queue';
 
-}
+/**
+ * Create queue if does not exists
+ * If a queue already exists use that
+ */
+
 
 
 

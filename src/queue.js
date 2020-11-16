@@ -2,19 +2,26 @@
  * Messages of WonderQ are stored in Queue
  */
 
-export default class Queue {
-    constructor(...messages, size) {
-        //Initialize the queue
-        this._messages = [...messages];
-        this._size = size;
+import { Queue } from './data.js';
+
+
+class WonderQ extends Queue {
+    constructor(name) {
+        super();
+        this._name = name;
     }
 
-    insert(...args) { };
+    publishMessage(...args) {
+        //Implements publish message for Q
+    };
 
-    delete(...args) { };
+    recieveMessages(...args) {
+        //Implements receive message for Q
+    };
 
-    getLength(...args) { };
-
-    isfull(...args) { };
-
+    getQueueName() {
+        return this._name
+    }
 }
+
+export const wonderQ = new WonderQ('wonder')
