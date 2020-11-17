@@ -1,20 +1,21 @@
 {
-  "jest": {
-    "verbose": true
-  },
+  "type": "module",
   "name": "wonder",
   "version": "1.0.0",
   "description": "WonderQ",
   "main": "main.js",
-  "type": "module",
   "author": "Anshul",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.26.13",
     "jest": "^26.6.1",
+    "jest-environment-node": "^26.6.1",
     "supertest": "^5.0.0"
   },
   "dependencies": {
     "uuid": "^8.3.1"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   }
 }

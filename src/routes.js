@@ -2,7 +2,7 @@ import { sendMessageUrl, recieveMessageUrl } from './config.js';
 import http from 'http';
 import url from 'url';
 import { Message } from './data.js';
-import { wonderQ } from './queue.js';
+import { publishToQueue, getMessagesFromQueue } from './queue.js';
 
 export const server = http.createServer((request, response) => {
     //Recieve request from different routes here
@@ -18,7 +18,7 @@ export const server = http.createServer((request, response) => {
         // Take out and parse message
         // call publish message from Q
         // return message id or other identifier as a acknowledgment response\
-        body = '';
+        let body = '';
 
         request.on('data', (chunk) => {
             body += chunk;
@@ -27,7 +27,7 @@ export const server = http.createServer((request, response) => {
         request.on('end', () => {
             let messageBody = JSON.parse(body)
 
-            let postMessage = Messasge(messageBody)
+            let postMessage = new Message(messageBody)
             let messageId = publishToQueue(postMessage);
 
             let returnResponse = {
