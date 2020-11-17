@@ -3,8 +3,8 @@ export class Message {
     constructor(message) {
         this._body = message;
         this._timestamp = Date.now();
-        this._status = false;
-        this._processing = false;
+        this._processed = false;
+        this._consumerId = "";
     }
 }
 
@@ -28,8 +28,11 @@ export class Queue {
         return this._messages.length
     };
 
-    isfull(...args) {
+    isFull(...args) {
         return this._messages.length == this._size
     };
 
+    isEmpty() {
+        return this._messages.length == 0;
+    }
 }

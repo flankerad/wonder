@@ -11,23 +11,41 @@ class WonderQ extends Queue {
         this._name = name;
     }
 
-    publishMessage(message) {
-        message.messageId = uuidv4();
-        message.timestamp = Date.now();
-        this.insert(message);
-        console.log(this._messages);
-        return message.messageId;
-    };
-
-    recieveMessages(...args) {
-        //Implements receive message for Q
-    };
-
     getQueueName() {
         return this._name
     }
+
+    publishMessage(message) {
+        message._messageId = uuidv4();
+        this.insert(message);
+        console.log(this._messages); //delete
+        return message.messageId;
+    };
+
+    recieveMessages(consumerId, limit=10) {
+        //Implements receive message for Q
+        let temp = []
+        for (let i = 0; i < limit; i++) {
+            if (!this.isEmpty) {
+                break;
+            }
+            this._messages[i]._consumerId = consumerId;
+            this._messages[i]._timestamp = Date.now();
+            temp.push(this._messages[i]);
+        }
+        return temp;
+        // return this._messsages.slice(0, 10);
+    };
+
+    deleteMessages(message) {
+        // this._messages.splice(0, 10);
+    }
 }
 
+const cleanup = () => {
+    // Job to unlock the messages if not processed within a
+    // certain time.
+}
 export const wonderQ = new WonderQ('wonder')
 
 
@@ -35,9 +53,14 @@ export const publishToQueue = (message) => {
     // Function parses request body and retrieves the message
     // Generates a message id and pushes that into the queue
     // After inserting  message, function returns message id
-    wonderQ.publishMessage(message);
+    return wonderQ.publishMessage(message);
 }
 
-export const getMessagesFromQueue = () => {
-    // Function pulls messages fro
+export const fetchMessages = () => {
+    // Function pulls messages first 10 messages from the queue
+    // Messages marked as processing
+    // When processed infroms the queue and deletes the messages
+    let messages = []
+    messages = wonderQ.recieveMessages()
+    return messages
 }

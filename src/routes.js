@@ -2,7 +2,7 @@ import { sendMessageUrl, recieveMessageUrl } from './config.js';
 import http from 'http';
 import url from 'url';
 import { Message } from './data.js';
-import { publishToQueue, getMessagesFromQueue } from './queue.js';
+import { publishToQueue, fetchMessages } from './queue.js';
 
 export const server = http.createServer((request, response) => {
     //Recieve request from different routes here
@@ -44,8 +44,14 @@ export const server = http.createServer((request, response) => {
 
     else if (requestUrl.pathname == '/consume' && request.method == 'GET') {
         console.log('Consume Message')
-        // Consume messages and send confirmation to the queue
-        wonderQ.consumeMessage(request, response)
+        // Get consumer Id from params
+        // consumer Id informs, where the message is under processing
+        // and which consumer is processing. (one in our case)
+        // Fetch messages (default limit = 10) from queue and return
+        const consumerId = requestUrl.query.consumerId
+        console.log(consumerId);
+        let messages = fetchMessages(consumerId);
+        return messages;
     }
 
     else {
