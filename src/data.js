@@ -24,15 +24,16 @@ export class Queue {
         return this._messages.pop(...args)
     };
 
-    getLength(...args) {
+    getLength() {
         return this._messages.length
     };
 
-    isFull(...args) {
+    isFull() {
         return this._messages.length == this._size
     };
 
     isEmpty() {
         return this._messages.length == 0;
     }
+
 }
