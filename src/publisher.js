@@ -1,9 +1,8 @@
 /**
  * Publisher publishes message to the queue
  */
-import { publishMessageUrl } from 'config';
-import { Message } from 'data';
-import { WonderQ } from 'queue';
+import { publishToQueue, fetchMessages } from './queue.js';
+import { Message } from './data.js';
 
 /**
  * Create queue if does not exists

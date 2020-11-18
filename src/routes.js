@@ -53,9 +53,11 @@ export const server = http.createServer((request, response) => {
 
         let consumerId = JSON.parse(JSON.stringify(requestUrl.query)).consumerId
         let messages = fetchMessages(consumerId);
-
+        console.log(consumerId)
         response.statusCode = 200;
         response.setHeader('content-Type', 'Application/json');
+        console.log("Sending messages ");
+        console.log(messages);
         response.end(JSON.stringify(messages));
     }
 

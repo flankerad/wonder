@@ -27,6 +27,9 @@ class WonderQ extends Queue {
         let temp = []
         for (let i = 0; i < this._messages.length; i++) {
 
+            if (this.isFull()) {
+                break;
+            }
             this._messages[i]._consumerId = consumerId;
             this._messages[i]._timestamp = Date.now();
             temp.push(this._messages[i]);
