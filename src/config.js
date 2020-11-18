@@ -11,3 +11,4 @@ export const recieveMessageUrl = baseUrl + recieveMessage
 export const queueName = 'wonder'
 export const consumerId = 1;
 
+export const maxTime = 5 * 60 * 1000

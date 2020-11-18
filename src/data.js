@@ -16,12 +16,12 @@ export class Queue {
         this._size = size;
     };
 
-    insert(...args) {
+    enqueue(...args) {
         return this._messages.push(...args)
     };
 
-    delete(...args) {
-        return this._messages.pop(...args)
+    dequeue(pos) {
+        this._messages.splice(pos, 1)
     };
 
     getLength() {

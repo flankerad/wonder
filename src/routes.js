@@ -58,6 +58,16 @@ export const server = http.createServer((request, response) => {
         response.end(JSON.stringify(returnResponse));
     }
 
+    else if (requestUrl.pathname == '/delete' && request.method == 'POST') {
+
+        // Delete the message from the queue when it is processed
+        
+        response.statusCode = 200;
+        response.setHeader('content-Type', 'Application/json');
+        response.end(JSON.stringify(returnResponse));
+    }
+
+
     else {
         let returnResponse = {
             "text": "Url endpint or method does not exist.",
@@ -67,4 +77,5 @@ export const server = http.createServer((request, response) => {
         response.setHeader('content-Type', 'Application/json');
         response.end(JSON.stringify(returnResponse));
     }
+
 })

@@ -25,8 +25,18 @@ export const consumer = async (id) => {
             await new Promise((resolve, reject) => setTimeout(resolve, 1000));
             await consumer(id);
         } else {
-            var jsonResponse = await response.json();
-            return jsonResponse;
+            var messages = await response.json();
+
+            // Go through messages and process them
+            let min = 1,
+                max = 10;
+            for (let i = 0; i < messages.length; i++)  {
+
+                let rand = Math.floor(Math.random() * (max - min + 1) + min);
+                let processedMessage = processMessage(messages[i], rand)
+                deleteMessageFromQueue(processedMessage);
+
+            }
         }
 
     } catch (err) {
@@ -36,3 +46,15 @@ export const consumer = async (id) => {
 }
 consumer(consumerId)
 
+const processMessage = (message, processingTime) => {
+    // Mock processing a message
+    // Complete processing in a random time
+
+    setTimeout(() => {
+        message._processed = true;
+        console.log('Processing in ' + processingTime + ' seconds');
+        console.log('Message ID ' + message._id);
+        return message
+    }, rand * 1000)
+
+}
