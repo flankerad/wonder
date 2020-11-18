@@ -16,21 +16,17 @@ import { Message } from './data.js';
  * If no messages are present waits for the messages to arrive
  */
 
-console.log("the id for consumer "+ consumerId)
 export const consumer = async (id) => {
     try {
-        console.log('This is consumer calling')
         var response = await fetch(recieveMessageUrl + "?consumerId=" + id);
 
         if (response.status > 201) {
-            console.log(response.statusText);
             // try again after 1 second
             await new Promise((resolve, reject) => setTimeout(resolve, 1000));
             await consumer(id);
         } else {
-            var messages = await response.json();
-            console.log("Got messages from consumer" + messages);
-            return messages
+            var jsonResponse = await response.json();
+            return jsonResponse;
         }
 
     } catch (err) {

@@ -44,7 +44,6 @@ export const server = http.createServer((request, response) => {
     }
 
     else if (requestUrl.pathname == '/consume' && request.method == 'GET') {
-        console.log('Consume Message')
 
         // Get consumer Id from params
         // consumer Id informs, where the message is under processing
@@ -52,16 +51,20 @@ export const server = http.createServer((request, response) => {
         // Fetch messages (default limit = 10) from queue and return
 
         let consumerId = JSON.parse(JSON.stringify(requestUrl.query)).consumerId
-        let messages = fetchMessages(consumerId);
-        console.log(consumerId)
+        let returnResponse = fetchMessages(consumerId);
+
         response.statusCode = 200;
         response.setHeader('content-Type', 'Application/json');
-        console.log("Sending messages ");
-        console.log(messages);
-        response.end(JSON.stringify(messages));
+        response.end(JSON.stringify(returnResponse));
     }
 
     else {
-        console.log('Url endpint or method does not exist.')
+        let returnResponse = {
+            "text": "Url endpint or method does not exist.",
+        }
+
+        response.statusCode = 404;
+        response.setHeader('content-Type', 'Application/json');
+        response.end(JSON.stringify(returnResponse));
     }
 })

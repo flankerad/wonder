@@ -18,12 +18,11 @@ class WonderQ extends Queue {
     publishMessage(message) {
         message._messageId = uuidv4();
         this.insert(message);
-        return message.messageId;
+        return message._messageId;
     };
 
     recieveMessages(consumerId, limit) {
         //Implements receive message for Q
-
         let temp = []
         for (let i = 0; i < this._messages.length; i++) {
 
@@ -58,6 +57,7 @@ export const publishToQueue = (message) => {
     // After inserting  message, function returns message id
 
     return wonderQ.publishMessage(message);
+
 }
 
 export const fetchMessages = (consumerId, limit = 10) => {
@@ -66,6 +66,6 @@ export const fetchMessages = (consumerId, limit = 10) => {
     // Messages marked as processing
     // When processed infroms the queue and deletes the messages
 
-    let messages = wonderQ.recieveMessages(consumerId, limit);
-    return messages
+    return wonderQ.recieveMessages(consumerId, limit);
+
 }
