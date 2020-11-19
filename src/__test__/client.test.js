@@ -21,11 +21,10 @@ describe('Publisher for message queue', () => {
 
             let message = new Message('message');
             messageId = await publishToQueue(message);
-            console.log("Published Message Id", messageId)
             done();
 
         } catch (err) {
-            console.log("Error occured while calling Publisher TEST")
+            console.log("Error occured while calling Publisher TEST", err)
             fail(err)
         }
     });
@@ -41,7 +40,7 @@ describe('Consumer for message queue', () => {
             done();
 
         } catch (err) {
-            console.log("Error occured while calling Consumer TEST")
+            console.log("Error occured while calling Consumer TEST", err)
             fail(err)
         }
     });
@@ -60,7 +59,7 @@ describe('Delelte message in queue', () => {
 
         } catch (err) {
 
-            console.log("Error occured while calling Delete TEST")
+            console.log("Error occured while calling Delete TEST", err)
             fail(err)
         }
     });

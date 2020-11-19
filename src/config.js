@@ -2,8 +2,8 @@ export const hostname = "127.0.0.1"
 export const port = "3000"
 const baseUrl = `http://${hostname}:${port}`
 const version = 1
-export const sendMessage = `${version}/publish` //queue the message for processing
-export const recieveMessage = `${version}/consume` //pick a  message from queue
+export const sendMessage = `/${version}/publish` //queue the message for processing
+export const recieveMessage = `/${version}/consume` //pick a  message from queue
 export let queueSize = 100 //size of the total messages in queues
 export let messageProcessingTimeout = 5 //time in seconds
 

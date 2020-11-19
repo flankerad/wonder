@@ -1,22 +1,21 @@
 import supertest from 'supertest';
-import assert from 'assert';
+import assert , { fail } from 'assert';
 import { server } from '../routes.js';
-import { Message } from '../data.js';
+import { sendMessage, recieveMessage } from '../config.js';
 import { publishToQueue, fetchMessages } from '../queue.js';
 
 let app = server;
 const request = supertest(app);
 
 
-describe('Publish', () => {
+describe('RoutesPublish', () => {
     it('should publish a new message', (done) => {
-        request.post('/publish')
+        request.post(sendMessage)
             .send({ message: "message" })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .end((err, res) => {
-                if (err) return done(err);
-                console.log(res.body);
+                if (err) fail(err);
                 assert(res.body.text, 'Message Published to queue')
                 done();
             });
@@ -26,13 +25,12 @@ describe('Publish', () => {
 
 describe('Consume', () => {
     it('Consume a message from queue', (done) => {
-        request.get('/consume?cid=007')
+        request.get(recieveMessage+'?cid=007')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end((err, res) => {
-                    if (err) return done(err);
-                    console.log("Result "+JSON.stringify(res.body));
+                    if (err) fail(err);
                     done();
                     });
             })
@@ -40,13 +38,12 @@ describe('Consume', () => {
 
 describe('Delete', () => {
     it('Delete a message from queue', (done) => {
-        request.delete('/consume?cid=007&id=0')
+        request.delete(recieveMessage+'?cid=007&id=0')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end((err, res) => {
-                    if (err) return done(err);
-                    console.log("Result "+JSON.stringify(res.body));
+                    if (err) fail(err);
                     done();
                     });
             })

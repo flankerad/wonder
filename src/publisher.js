@@ -2,7 +2,7 @@
  * Publisher publishes message to the queue
  */
 import fetch from 'node-fetch';
-import { cid, sendMessageUrl } from './config.js';
+import { sendMessageUrl } from './config.js';
 
 /**
  * Publish a message which may be fetched from a db or called from somewhere else with data
