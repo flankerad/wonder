@@ -70,8 +70,8 @@ export const server = http.createServer((request, response) => {
         // Fetch messages (default limit = 10) from queue and return
 
         let queryObj = JSON.parse(JSON.stringify(requestUrl.query));
-        
-        deleteQueueMessage(queryObj.cid, queryObj.id)
+
+        deleteQueueMessage(queryObj.cid, +(queryObj.id))
         response.end()
 
     }

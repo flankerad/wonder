@@ -19,9 +19,9 @@ describe('Publish', () => {
                 console.log(res.body);
                 assert(res.body.text, 'Message Published to queue')
                 done();
-                });
-        })
-})
+            });
+    })
+});
 
 
 describe('Consume', () => {
@@ -38,3 +38,16 @@ describe('Consume', () => {
             })
 });
 
+describe('Delete', () => {
+    it('Delete a message from queue', (done) => {
+        request.delete('/consume?cid=007&id=0')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+                .end((err, res) => {
+                    if (err) return done(err);
+                    console.log("Result "+JSON.stringify(res.body));
+                    done();
+                    });
+            })
+});
