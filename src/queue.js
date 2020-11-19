@@ -18,6 +18,7 @@ class WonderQ extends Queue {
     publishMessage(message) {
         message._id = uuidv4();
         this.enqueue(message);
+
         return message._id;
     };
 
@@ -53,7 +54,9 @@ class WonderQ extends Queue {
         let message = this._messages.get(key)
         if (message._consumerId == cid) {
             this.dequeue(key)
+            return true;
         }
+        return false;
     }
 
     unlockMessages() {
@@ -64,12 +67,12 @@ class WonderQ extends Queue {
 
         let currTime = Date.now();
 
-        for (let [key, message]  of this._messages) {
+        for (let message  of this._messages) {
 
-            let processingTime = message._timestamp + maxTime;
+            let processingTime = message[1]._timestamp + maxTime;
 
             if (currTime > processingTime) {
-                message._consumerId = "";
+                message[1]._consumerId = "";
             }
         }
     }
@@ -103,12 +106,12 @@ export const deleteQueueMessage = (cid, mid) => {
     // delete for messages which are in processed and
     // whos timestamp is greater than 5 seconds
     // or delete messages with specific messageId
-    wonderQ.deleteMessages(cid, mid)
+    return wonderQ.deleteMessages(cid, mid)
+
 }
 
 export const unlockMessages = () => {
     setInterval(() => {
-
         // Job to unlock the messages if not processed within a
         // maximum processing time.
 

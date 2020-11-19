@@ -42,15 +42,14 @@ export const server = http.createServer((request, response) => {
                 "messageId": messageId
             }
 
-            console.log(returnResponse);
             response.end(JSON.stringify(returnResponse));
 
         });
     }
 
-    else if (requestUrl.pathname == '/consume' && request.method == 'GET') {
+    else if (requestUrl.pathname == '/coume' && request.method == 'GET') {
 
-        // Get consumer Id from params
+        // Get coumer Id from params
         // consumer Id informs, where the message is under processing
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
@@ -70,16 +69,16 @@ export const server = http.createServer((request, response) => {
 
         let queryObj = JSON.parse(JSON.stringify(requestUrl.query));
 
-        deleteQueueMessage(queryObj.cid, +(queryObj.id))
-        response.end()
+        let returnResponse = deleteQueueMessage(queryObj.cid, +(queryObj.id))
+        response.end(JSON.stringify(returnResponse));
 
     }
 
     else {
+
         let returnResponse = {
             "text": "Url endpoint or method does not exist.",
         }
-
         response.statusCode = 404;
         response.end(JSON.stringify(returnResponse));
     }
