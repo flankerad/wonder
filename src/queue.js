@@ -27,17 +27,18 @@ class WonderQ extends Queue {
         // set processing consumer Id
 
         let i = 0,
-            returnMap = new Map();
+            returnMap = {};
 
-        for (let [key, message]  of this._messages) {
+        for (let message of this._messages) {
 
-            if (!message._consumerId  && i < limit) {
+            if (message[1]._consumerId == '' && i < limit) {
 
-                message._consumerId = cid;
-                message._timestamp = Date.now()
-                returnMap.set(key, message)
+                message[1]._consumerId = cid;
+                message[1]._timestamp = Date.now();
+                returnMap[message[0]] = message[1];
+                i++;
 
-            } else {
+            } else if(i == limit) {
                 break;
             }
         }

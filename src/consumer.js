@@ -15,17 +15,28 @@ import { Message } from './data.js';
  * Initiates delete for the messages that have been processed
  * If no messages are present waits for the messages to arrive
  */
-
 export const consumer = async (id) => {
     try {
         var response = await fetch(recieveMessageUrl + "?cid=" + id);
 
-        if (response.status > 201) {
-            // try again after 1 second
-            await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+        if (response.status == 502) {
+            // connection timeout
+            // reconnect
+
             await consumer(id);
+
+          } else if (response.status != 200) {
+            // An error - let's show it
+            console.log(response.statusText);
+            // Reconnect in one second
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            await consumer(id);
+
         } else {
-            var messages = await response.json();
+
+            let messages = await response.json();
+
+            console.log("Consumer Message", messages);
 
             // Go through messages and
             // process them at random time
@@ -33,14 +44,16 @@ export const consumer = async (id) => {
                 max = 10,
                 rand = Math.floor(Math.random() * (max - min + 1) + min);
 
-            for (let [key, message]  of messages)  {
+            for (let key in messages)  {
 
-                processMessage(message, rand)
+                processMessage(messages[key], rand)
                 deleteMessageFromQueue(key);
 
             }
-            await consumer(cid);
-        }
+
+            // Call subscribe() again to get the next message
+            await consumer(id);
+          }
 
     } catch (err) {
         console.log("Error occured while calling Consumer")
@@ -68,7 +81,7 @@ const deleteMessageFromQueue = async(id) => {
     //Deletes processed messages from queue
 
     const url = `${recieveMessageUrl}?cid=${cid}&id=${id}`;
-    
+
     try {
         const response = await fetch(url, { method: 'DELETE'});
         const json = await response.json();

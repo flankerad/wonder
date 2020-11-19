@@ -10,11 +10,10 @@ export const server = http.createServer((request, response) => {
     // let wonderQ = WonderQ()
 
     const requestUrl = url.parse(request.url, true);
-    console.log(requestUrl)
-
 
     // Consumer API (GET)
     // Publish API (POST)
+    // Delete API (DELETE)
 
     response.statusCode = 200;
     response.setHeader('content-Type', 'Application/json');
@@ -43,7 +42,7 @@ export const server = http.createServer((request, response) => {
                 "messageId": messageId
             }
 
-
+            console.log(returnResponse);
             response.end(JSON.stringify(returnResponse));
 
         });
@@ -78,7 +77,7 @@ export const server = http.createServer((request, response) => {
 
     else {
         let returnResponse = {
-            "text": "Url endpint or method does not exist.",
+            "text": "Url endpoint or method does not exist.",
         }
 
         response.statusCode = 404;
