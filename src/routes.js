@@ -1,4 +1,4 @@
-import { sendMessageUrl, recieveMessageUrl } from './config.js';
+import { sendMessage, recieveMessage } from './config.js';
 import http from 'http';
 import url from 'url';
 import { Message } from './data.js';
@@ -18,7 +18,7 @@ export const server = http.createServer((request, response) => {
     response.statusCode = 200;
     response.setHeader('content-Type', 'Application/json');
 
-    if (requestUrl.pathname == '/publish' && request.method == 'POST') {
+    if (requestUrl.pathname == sendMessage && request.method == 'POST') {
 
         // Publish the message and recieve the confirmation message id
         // Take out and parse message
@@ -47,20 +47,20 @@ export const server = http.createServer((request, response) => {
         });
     }
 
-    else if (requestUrl.pathname == '/coume' && request.method == 'GET') {
+    else if (requestUrl.pathname == recieveMessage && request.method == 'GET') {
 
-        // Get coumer Id from params
+        // Get consumer Id from params
         // consumer Id informs, where the message is under processing
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
 
-        let cid = JSON.parse(JSON.stringify(requestUrl.query)).cid;
+        let queryObj = JSON.parse(JSON.stringify(requestUrl.query));
 
-        let returnResponse = fetchMessages(cid);
+        let returnResponse = fetchMessages(queryObj.cid, queryObj.limit);
         response.end(JSON.stringify(returnResponse));
     }
 
-    else if (requestUrl.pathname == '/consume' && request.method == 'DELETE') {
+    else if (requestUrl.pathname == recieveMessage && request.method == 'DELETE') {
 
         // Get consumer Id from params
         // consumer Id informs, where the message is under processing
