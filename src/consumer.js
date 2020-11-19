@@ -4,7 +4,7 @@
  */
 import fetch from 'node-fetch';
 import { recieveMessageUrl } from './config.js';
-import { consumerId } from './config.js';
+import { cid } from './config.js';
 import { publishToQueue, fetchMessages } from './queue.js';
 import { Message } from './data.js';
 
@@ -18,7 +18,7 @@ import { Message } from './data.js';
 
 export const consumer = async (id) => {
     try {
-        var response = await fetch(recieveMessageUrl + "?consumerId=" + id);
+        var response = await fetch(recieveMessageUrl + "?cid=" + id);
 
         if (response.status > 201) {
             // try again after 1 second
@@ -30,15 +30,16 @@ export const consumer = async (id) => {
             // Go through messages and
             // process them at random time
             let min = 1,
-                max = 10;
-            for (let i = 0; i < messages.length; i++)  {
+                max = 10,
+                rand = Math.floor(Math.random() * (max - min + 1) + min);
 
-                let rand = Math.floor(Math.random() * (max - min + 1) + min);
-                let processedMessage = processMessage(messages[i], rand)
-                deleteMessageFromQueue(processedMessage._id);
+            for (let [key, message]  of messages)  {
+
+                processMessage(message, rand)
+                deleteMessageFromQueue(key);
 
             }
-            await consumer(consumerId);
+            await consumer(cid);
         }
 
     } catch (err) {
@@ -46,7 +47,7 @@ export const consumer = async (id) => {
         console.log(err)
     }
 }
-consumer(consumerId)
+consumer(cid)
 
 
 
@@ -63,14 +64,11 @@ const processMessage = (message, processingTime) => {
 
 }
 
-const deleteMessageFromQueue = async(messageId) => {
+const deleteMessageFromQueue = async(id) => {
     //Deletes processed messages from queue
-    const body = {
-        'messageId': messageId,
-        'consumerId': consumerId
-    }
-    const url = `${recieveMessageUrl}?consumerId=${consumerId}&messageId=${messageId}`
-        recieveMessageUrl + "?consumerId=" + id
+
+    const url = `${recieveMessageUrl}?cid=${cid}&id=${id}`;
+    
     try {
         const response = await fetch(url, { method: 'DELETE'});
         const json = await response.json();

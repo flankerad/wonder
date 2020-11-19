@@ -56,9 +56,9 @@ export const server = http.createServer((request, response) => {
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
 
-        let consumerId = JSON.parse(JSON.stringify(requestUrl.query)).consumerId;
+        let cid = JSON.parse(JSON.stringify(requestUrl.query)).cid;
 
-        let returnResponse = fetchMessages(consumerId);
+        let returnResponse = fetchMessages(cid);
         response.end(JSON.stringify(returnResponse));
     }
 
@@ -69,11 +69,9 @@ export const server = http.createServer((request, response) => {
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
 
-        let queryObj = JSON.parse(JSON.stringify(requestUrl.query)),
-            consumerId = queryObj.consumerId,
-            messageId = queryObj.messageId;
-
-        deleteQueueMessage(consumerId, messageId)
+        let queryObj = JSON.parse(JSON.stringify(requestUrl.query));
+        
+        deleteQueueMessage(queryObj.cid, queryObj.id)
         response.end()
 
     }

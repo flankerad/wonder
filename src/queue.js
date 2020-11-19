@@ -16,42 +16,42 @@ class WonderQ extends Queue {
     }
 
     publishMessage(message) {
-        message._messageId = uuidv4();
+        message._id = uuidv4();
         this.enqueue(message);
-        return message._messageId;
+        return message._id;
     };
 
-    recieveMessages(consumerId, limit) {
+    recieveMessages(cid, limit) {
         //Implements receive message for Q
         // Pull get messages from queue
         // set processing consumer Id
 
-        let temp = []
-        for (let i = 0; i < this._messages.length; i++) {
+        let i = 0,
+            returnMap = new Map();
 
-            if (this.isFull()) {
+        for (let [key, message]  of this._messages) {
+
+            if (!message._consumerId  && i < limit) {
+
+                message._consumerId = cid;
+                message._timestamp = Date.now()
+                returnMap.set(key, message)
+
+            } else {
                 break;
             }
-
-            this._messages[i]._consumerId = consumerId;
-            this._messages[i]._timestamp = Date.now();
-            temp.push(this._messages[i]);
-
         }
-        return temp;
+
+        return returnMap;
+
     };
 
-    deleteMessages(cid, mid) {
-
+    deleteMessages(cid, key) {
         // Delete processed message requested by Consumer
 
-        for (let i = 0; i < this.getLength(); i++) {
-
-            if (this._messages[i]._messageId == mid &&
-                this._messages[i]._consumerId == cid) {
-                 this.dequeue(i, 1);
-
-            }
+        let message = this._messages.get(key)
+        if (message._consumerId == cid) {
+            this.dequeue(key)
         }
     }
 
@@ -63,14 +63,12 @@ class WonderQ extends Queue {
 
         let currTime = Date.now();
 
-        for (let i = 0; i < this.getLength(); i++) {
+        for (let [key, message]  of this._messages) {
 
-            let processingTime = this._messages[i]._timestamp + maxTime;
+            let processingTime = message._timestamp + maxTime;
 
-            if (currTime > processingTime &&
-                this._messages[i]._processed == false) {
-
-                this._messages._consumerId = "";
+            if (currTime > processingTime) {
+                message._consumerId = "";
             }
         }
     }
@@ -89,13 +87,13 @@ export const publishToQueue = (message) => {
 
 }
 
-export const fetchMessages = (consumerId, limit = 10) => {
+export const fetchMessages = (cid, limit = 10) => {
 
     // Function pulls messages first 10 messages from the queue
     // Messages marked as processing
     // When processed infroms the queue and deletes the messages
 
-    return wonderQ.recieveMessages(consumerId, limit);
+    return wonderQ.recieveMessages(cid, limit);
 
 }
 

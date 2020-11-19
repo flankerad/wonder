@@ -4,11 +4,11 @@ import { server } from '../routes.js';
 import { Message } from '../data.js';
 import { publishToQueue, fetchMessages } from '../queue.js';
 import { consumer } from '../consumer.js';
-import { consumerId } from '../config.js';
+import { cid } from '../config.js';
 
 
 describe('Consumer for message queue', () => {
-    let id = consumerId;
+    let id = cid;
     let messageId;
     beforeEach( async() => {
         let message = new Message('message');

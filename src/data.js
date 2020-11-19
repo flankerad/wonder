@@ -1,6 +1,7 @@
 // Message to be sent from publisher
 export class Message {
     constructor(message) {
+        this._id = "";
         this._body = message;
         this._timestamp = Date.now();
         this._processed = false;
@@ -12,28 +13,30 @@ export class Message {
 export class Queue {
     constructor(size) {
         //Initialize the queue
-        this._messages = [];
+        this._messages = new Map();
         this._size = size;
+        this._tail = 0
     };
 
-    enqueue(...args) {
-        return this._messages.push(...args)
+    enqueue(data) {
+        this._messages.set(this._tail, data);
+        this._tail++;
     };
 
     dequeue(pos) {
-        this._messages.splice(pos, 1)
+        return this._messages.delete(pos);
     };
 
     getLength() {
-        return this._messages.length
+        return this._messages.size
     };
 
     isFull() {
-        return this._messages.length == this._size
+        return this._messages.size == this._size
     };
 
     isEmpty() {
-        return this._messages.length == 0;
+        return this._messages.size == 0;
     }
 
 }

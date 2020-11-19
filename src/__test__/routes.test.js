@@ -26,7 +26,7 @@ describe('Publish', () => {
 
 describe('Consume', () => {
     it('Consume a message from queue', (done) => {
-        request.get('/consume?consumerId=007')
+        request.get('/consume?cid=007')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)

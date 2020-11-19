@@ -9,6 +9,6 @@ export let messageProcessingTimeout = 5 //time in seconds
 export const sendMessageUrl = baseUrl + sendMessage
 export const recieveMessageUrl = baseUrl + recieveMessage
 export const queueName = 'wonder'
-export const consumerId = 1;
+export const cid = 1;
 
 export const maxTime = 5 * 60 * 1000
