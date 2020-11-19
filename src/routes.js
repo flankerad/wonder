@@ -2,7 +2,7 @@ import { sendMessageUrl, recieveMessageUrl } from './config.js';
 import http from 'http';
 import url from 'url';
 import { Message } from './data.js';
-import { publishToQueue, fetchMessages } from './queue.js';
+import { publishToQueue, fetchMessages, deleteQueueMessage } from './queue.js';
 
 export const server = http.createServer((request, response) => {
 
@@ -56,17 +56,26 @@ export const server = http.createServer((request, response) => {
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
 
-        let queryObj = JSON.parse(JSON.stringify(requestUrl.query)),
-            consumerId = queryObj.consumerId,
-            operation = queryObj.operation;
-
-        if (operation && operation == 'delete') {
-            deleteQueueMessage(message)
-            response.end()
-        }
+        let consumerId = JSON.parse(JSON.stringify(requestUrl.query)).consumerId;
 
         let returnResponse = fetchMessages(consumerId);
         response.end(JSON.stringify(returnResponse));
+    }
+
+    else if (requestUrl.pathname == '/consume' && request.method == 'DELETE') {
+
+        // Get consumer Id from params
+        // consumer Id informs, where the message is under processing
+        // and which consumer is processing. (one in our case)
+        // Fetch messages (default limit = 10) from queue and return
+
+        let queryObj = JSON.parse(JSON.stringify(requestUrl.query)),
+            consumerId = queryObj.consumerId,
+            messageId = queryObj.messageId;
+
+            deleteQueueMessage(consumerId, messageId)
+            response.end()
+
     }
 
     else {

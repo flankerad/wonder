@@ -41,13 +41,14 @@ class WonderQ extends Queue {
         return temp;
     };
 
-    deleteMessages(messageId, consumerId) {
+    deleteMessages(cid, mid) {
 
         // Delete processed message requested by Consumer
 
         for (let i = 0; i < this.getLength(); i++) {
 
-             if (this._messages[i]._messageId == messageId && this._messages[i]._consumerId == consumerId) {
+            if (this._messages[i]._messageId == mid &&
+                this._messages[i]._consumerId == cid) {
                  this.dequeue(i, 1);
 
             }
@@ -70,10 +71,12 @@ class WonderQ extends Queue {
                 this._messages[i]._processed == false) {
 
                 this._messages._consumerId = "";
+            }
+        }
     }
 }
 
-export const wonderQ = new WonderQ('wonder')
+export const wonderQ = new WonderQ('wonder');
 
 
 export const publishToQueue = (message) => {
@@ -96,12 +99,12 @@ export const fetchMessages = (consumerId, limit = 10) => {
 
 }
 
-export const deleteQueueMessage = (messageId) => {
+export const deleteQueueMessage = (cid, mid) => {
 
     // delete for messages which are in processed and
     // whos timestamp is greater than 5 seconds
     // or delete messages with specific messageId
-    wonderQ.deleteMessages(messageId)
+    wonderQ.deleteMessages(cid, mid)
 }
 
 export const unlockMessages = () => {

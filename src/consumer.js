@@ -27,14 +27,15 @@ export const consumer = async (id) => {
         } else {
             var messages = await response.json();
 
-            // Go through messages and process them at random time
+            // Go through messages and
+            // process them at random time
             let min = 1,
                 max = 10;
             for (let i = 0; i < messages.length; i++)  {
 
                 let rand = Math.floor(Math.random() * (max - min + 1) + min);
                 let processedMessage = processMessage(messages[i], rand)
-                deleteMessageFromQueue(processedMessage);
+                deleteMessageFromQueue(processedMessage._id);
 
             }
             await consumer(consumerId);
@@ -62,7 +63,25 @@ const processMessage = (message, processingTime) => {
 
 }
 
-const deleteMessageFromQueue = () => {
+const deleteMessageFromQueue = async(messageId) => {
     //Deletes processed messages from queue
+    const body = {
+        'messageId': messageId,
+        'consumerId': consumerId
+    }
+    const url = `${recieveMessageUrl}?consumerId=${consumerId}&messageId=${messageId}`
+        recieveMessageUrl + "?consumerId=" + id
+    try {
+        const response = await fetch(url, { method: 'DELETE'});
+        const json = await response.json();
+        console.log("Message Deleted")
+        console.log(json);
+
+    } catch (err) {
+        console.log("Error occured while calling Consumer")
+        console.log(err)
+    }
+
+
 
 }
