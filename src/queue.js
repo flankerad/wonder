@@ -17,45 +17,59 @@ class WonderQ extends Queue {
 
     publishMessage(message) {
         message._messageId = uuidv4();
-        this.insert(message);
+        this.enqueue(message);
         return message._messageId;
     };
 
     recieveMessages(consumerId, limit) {
         //Implements receive message for Q
+        // Pull get messages from queue
+        // set processing consumer Id
+
         let temp = []
         for (let i = 0; i < this._messages.length; i++) {
 
             if (this.isFull()) {
                 break;
             }
+
             this._messages[i]._consumerId = consumerId;
             this._messages[i]._timestamp = Date.now();
             temp.push(this._messages[i]);
 
         }
         return temp;
-        // return this._messsages.slice(0, 10);
     };
 
-    deleteMessages(messageId) {
-        console.log("delete messages")
-        let currTime = Date.now()
-        for (let i = 0; i < this._messages.length; i++) {
-            let processingTime = this._messages[i]._timestamp + maxTime;
+    deleteMessages(messageId, consumerId) {
 
-            //When current time has exceed processing time
-            // Also it not a explicit delete call
-            if (!messageId && currTime > processingTime) {
-                console.log("job delete"+ this._messages[i]._messageId)
-                this._messages.splice(i, 1);
+        // Delete processed message requested by Consumer
 
-            } else if(this._messages[i]._messageId == messageId) {
-                // Explicit delete call
-                console.log("explicit delete " + this._messages[i]._messageId)
-                this._messages.splice(i, 1);
+        for (let i = 0; i < this.getLength(); i++) {
+
+             if (this._messages[i]._messageId == messageId && this._messages[i]._consumerId == consumerId) {
+                 this.dequeue(i, 1);
+
             }
         }
+    }
+
+    unlockMessages() {
+
+        // When current time has exceed processing time
+        // Remove consumer Id from unprocessed messages
+        // making them available for other consumers to pick
+
+        let currTime = Date.now();
+
+        for (let i = 0; i < this.getLength(); i++) {
+
+            let processingTime = this._messages[i]._timestamp + maxTime;
+
+            if (currTime > processingTime &&
+                this._messages[i]._processed == false) {
+
+                this._messages._consumerId = "";
     }
 }
 
@@ -77,6 +91,7 @@ export const fetchMessages = (consumerId, limit = 10) => {
     // Function pulls messages first 10 messages from the queue
     // Messages marked as processing
     // When processed infroms the queue and deletes the messages
+
     return wonderQ.recieveMessages(consumerId, limit);
 
 }
@@ -91,8 +106,10 @@ export const deleteQueueMessage = (messageId) => {
 
 export const unlockMessages = () => {
     setInterval(() => {
+
         // Job to unlock the messages if not processed within a
         // maximum processing time.
+
         wonderQ.unlockMessages()
     }, maxTime);
 }

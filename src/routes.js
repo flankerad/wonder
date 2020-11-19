@@ -5,12 +5,19 @@ import { Message } from './data.js';
 import { publishToQueue, fetchMessages } from './queue.js';
 
 export const server = http.createServer((request, response) => {
+
     //Recieve request from different routes here
     // let wonderQ = WonderQ()
+
     const requestUrl = url.parse(request.url, true);
     console.log(requestUrl)
+
+
     // Consumer API (GET)
     // Publish API (POST)
+
+    response.statusCode = 200;
+    response.setHeader('content-Type', 'Application/json');
 
     if (requestUrl.pathname == '/publish' && request.method == 'POST') {
 
@@ -36,8 +43,7 @@ export const server = http.createServer((request, response) => {
                 "messageId": messageId
             }
 
-            response.statusCode = 200;
-            response.setHeader('content-Type', 'Application/json');
+
             response.end(JSON.stringify(returnResponse));
 
         });
@@ -50,23 +56,18 @@ export const server = http.createServer((request, response) => {
         // and which consumer is processing. (one in our case)
         // Fetch messages (default limit = 10) from queue and return
 
-        let consumerId = JSON.parse(JSON.stringify(requestUrl.query)).consumerId
+        let queryObj = JSON.parse(JSON.stringify(requestUrl.query)),
+            consumerId = queryObj.consumerId,
+            operation = queryObj.operation;
+
+        if (operation && operation == 'delete') {
+            deleteQueueMessage(message)
+            response.end()
+        }
+
         let returnResponse = fetchMessages(consumerId);
-
-        response.statusCode = 200;
-        response.setHeader('content-Type', 'Application/json');
         response.end(JSON.stringify(returnResponse));
     }
-
-    else if (requestUrl.pathname == '/delete' && request.method == 'POST') {
-
-        // Delete the message from the queue when it is processed
-        
-        response.statusCode = 200;
-        response.setHeader('content-Type', 'Application/json');
-        response.end(JSON.stringify(returnResponse));
-    }
-
 
     else {
         let returnResponse = {
@@ -74,7 +75,6 @@ export const server = http.createServer((request, response) => {
         }
 
         response.statusCode = 404;
-        response.setHeader('content-Type', 'Application/json');
         response.end(JSON.stringify(returnResponse));
     }
 

@@ -27,7 +27,7 @@ export const consumer = async (id) => {
         } else {
             var messages = await response.json();
 
-            // Go through messages and process them
+            // Go through messages and process them at random time
             let min = 1,
                 max = 10;
             for (let i = 0; i < messages.length; i++)  {
@@ -37,6 +37,7 @@ export const consumer = async (id) => {
                 deleteMessageFromQueue(processedMessage);
 
             }
+            await consumer(consumerId);
         }
 
     } catch (err) {
@@ -45,6 +46,8 @@ export const consumer = async (id) => {
     }
 }
 consumer(consumerId)
+
+
 
 const processMessage = (message, processingTime) => {
     // Mock processing a message
@@ -56,5 +59,10 @@ const processMessage = (message, processingTime) => {
         console.log('Message ID ' + message._id);
         return message
     }, rand * 1000)
+
+}
+
+const deleteMessageFromQueue = () => {
+    //Deletes processed messages from queue
 
 }
