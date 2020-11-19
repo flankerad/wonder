@@ -35,7 +35,7 @@ export const server = http.createServer((request, response) => {
         request.on('end', () => {
             let messageBody = JSON.parse(body)
 
-            let postMessage = new Message(messageBody)
+            let postMessage = new Message(messageBody.message)
             let messageId = publishToQueue(postMessage);
 
             let returnResponse = {
@@ -73,8 +73,8 @@ export const server = http.createServer((request, response) => {
             consumerId = queryObj.consumerId,
             messageId = queryObj.messageId;
 
-            deleteQueueMessage(consumerId, messageId)
-            response.end()
+        deleteQueueMessage(consumerId, messageId)
+        response.end()
 
     }
 
