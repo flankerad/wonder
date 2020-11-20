@@ -104,6 +104,7 @@ Assuming the same system is up for deployment and no changes can be done
 * We can setup two EC2 instances, behind reverse proxy like Nginx when on instance goes down other can be served.
 * To have data consistency rsync or a sync deamon can share data.
   or if allowed cache Elasticache would remove necessity of reverse proxy.
+  API gateway: Managed service makes it easy to manage and monitor API's
 ```
 ### Authors
 **Anshul**

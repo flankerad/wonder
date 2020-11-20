@@ -1,4 +1,7 @@
-// Message to be sent from publisher
+/**
+ * A class managing queue
+ * @class Message
+ */
 export class Message {
     constructor(message) {
         this._id = "";
@@ -9,7 +12,10 @@ export class Message {
     }
 }
 
-
+/**
+ * A class managing queue
+ * @class
+ */
 export class Queue {
     constructor(size) {
         //Initialize the queue

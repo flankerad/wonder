@@ -7,6 +7,7 @@ import { recieveMessageUrl } from './config.js';
 import { cid, maxTries } from './config.js';
 import { publishToQueue, fetchMessages } from './queue.js';
 import { Message } from './data.js';
+import { async } from 'rsvp';
 
 /**
  * Consumer function
@@ -14,6 +15,9 @@ import { Message } from './data.js';
  * Processes them and mark them as processed
  * Initiates delete for the messages that have been processed
  * If no messages are present waits for the messages to arrive
+ * Till max tries are not reached
+ * @param {number} id Unique id of consumer
+ *
  */
 let tries = 0;
 
@@ -41,21 +45,17 @@ export const consumer = async (id) => {
 
                 // Go through messages and
                 // process them at random time
-                // let min = 1,
-                //     max = 10,
-                //     rand = Math.floor(Math.random() * (max - min + 1) + min);
 
                 // for (let key in messages) {
                 //     message[key].processed = true;
                 //     await processMessage(messages[key], rand)
                 //     await deleteMessageFromQueue(key);
-                //     // return
                 // }
 
                 // Call consumer() again to get the next message
                 // await consumer(id);
 
-                return messages // Return messages
+                return messages // Return messages for e2e test
 
             }
             tries++;
@@ -74,12 +74,13 @@ export const consumer = async (id) => {
 // consumer(cid)
 
 
+/**
+ * Mocks processing a message in random time
+ * @param {object} message
+ */
+const processMessage = async(message) => {
 
-const processMessage = (message, processingTime) => {
-
-    // Mock processing a message
-    // Complete processing in a random time
-
+    let processingTime = Math.floor(Math.random() * 9);
     setTimeout(() => {
         message._processed = true;
         return message
@@ -87,23 +88,22 @@ const processMessage = (message, processingTime) => {
 
 }
 
+/**
+ * This function deletes messages from queue
+ * When messages are processed successfully
+ * Deletes processed messages from queue
+ * @param {number} id Id is the key of message in the queue
+ * @returns {string} true or false
+ */
 export const deleteMessageFromQueue = async (id) => {
-
-    //Deletes processed messages from queue
-
     const url = `${recieveMessageUrl}?cid=${cid}&id=${id}`;
-
     try {
         const response = await fetch(url, { method: 'DELETE'});
         const isDeleted = await response.text();
         return isDeleted;
-
     } catch (err) {
         console.log("Error occured while calling Delete Message")
         console.log(err)
         return err
     }
-
-
-
 }
