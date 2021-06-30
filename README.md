@@ -4,7 +4,7 @@ WonderQ is a basic messaging queue implemented in Javascript/ES6 with Nodejs.
 >* Publisher publishes message to queue and consumer processes messages, after processing messages get deleted from the queue.
 > * When consumer retrieves messages from the queue it sets <*consumerId*> ensuring message is processed by only one consumer at a any given time.
 > * If message is not processed within a defined time, messages is unlocked and then available for other consumers to process.
-> Limitations and scaling up ideas are listed below.
+> * Limitations and scaling up ideas are listed below.
 
 
 ### Requirements
